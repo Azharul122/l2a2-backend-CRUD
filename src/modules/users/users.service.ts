@@ -10,8 +10,13 @@ const allUser = async () => {
   const result = await usersModel.find();
   return result;
 };
+const singleUser = async (userId: string) => {
+  const result = await usersModel.findOne( {userId} );
+  return result;
+};
 
 export const userServices = {
   craeteUserIntoDB,
   allUser,
+  singleUser,
 };

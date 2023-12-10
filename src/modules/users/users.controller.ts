@@ -30,8 +30,24 @@ const getAllUser = async (req: Request, res: Response) => {
     console.log(error);
   }
 };
+const getSingleUser = async (req: Request, res: Response) => {
+  try {
+    const id = req.params.userId;
+    
+    const result = await userServices.singleUser(id);
+
+    res.status(200).json({
+      message: 'Single data fatched successfully',
+      success: true,
+      data: result,
+    });
+  } catch (error) {
+    console.log(error);
+  }
+};
 
 export const userContrller = {
   craeteUser,
   getAllUser,
+  getSingleUser,
 };
