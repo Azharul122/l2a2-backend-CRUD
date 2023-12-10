@@ -2,8 +2,8 @@ import { Schema, model } from 'mongoose';
 import { Address, Orders, User, FullName } from './users/users.interface';
 
 const fullNameSchema = new Schema<FullName>({
-  firstName: { type: String },
-  lastName: { type: String },
+  firstName: { type: String,required:true },
+  lastName: { type: String,required:true },
 });
 
 const addressSchema = new Schema<Address>({
