@@ -1,5 +1,6 @@
 import { Request, Response } from 'express';
 import { userServices } from './users.service';
+import { Orders } from './users.interface';
 // import { User } from "./users.interface";
 
 const craeteUser = async (req: Request, res: Response) => {
@@ -77,6 +78,25 @@ const updateUser = async (req: Request, res: Response) => {
     });
   }
 };
+const addOrders = async (req: Request, res: Response) => {
+  try {
+    const id = req.params.userId;
+    const body_result = req.body as Orders;
+    await userServices.addOrdersToDB(id, body_result);
+
+    res.status(200).json({
+      message: 'Order placed',
+      success: true,
+      data: null,
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      message: 'Internal Server Error',
+      success: false,
+    });
+  }
+};
 
 export const userContrller = {
   craeteUser,
@@ -84,4 +104,5 @@ export const userContrller = {
   getSingleUser,
   updateUser,
   deleteUser,
+  addOrders,
 };

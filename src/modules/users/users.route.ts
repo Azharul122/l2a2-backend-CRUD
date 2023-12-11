@@ -7,5 +7,6 @@ router.get('/users/', userContrller.getAllUser);
 router.get('/users/:userId', userContrller.getSingleUser);
 router.put('/users/:userId', userContrller.updateUser);
 router.delete('/users/:userId', userContrller.deleteUser);
+router.put('/users/:userId/orders', userContrller.addOrders);
 
 export const usersRoutes = router;
