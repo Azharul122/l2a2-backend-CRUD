@@ -45,6 +45,18 @@ const getSingleUser = async (req: Request, res: Response) => {
     console.log(error);
   }
 };
+const deleteUser = async (req: Request, res: Response) => {
+  try {
+    const id = req.params.userId;
+    await userServices.deleteUser(id);
+    res.status(200).json({
+      message: 'Data deleted from DB',
+      success: true,
+    });
+  } catch (error) {
+    console.log(error);
+  }
+};
 
 const updateUser = async (req: Request, res: Response) => {
   try {
@@ -71,4 +83,5 @@ export const userContrller = {
   getAllUser,
   getSingleUser,
   updateUser,
+  deleteUser,
 };

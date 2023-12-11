@@ -14,7 +14,13 @@ const singleUser = async (userId: string) => {
   const result = await usersModel.findOne({ userId });
   return result;
 };
-const updateUser = async (userId: string, userdata:string) => {
+
+const deleteUser = async (userId: string) => {
+  const result = await usersModel.deleteOne({ userId });
+  return result;
+};
+
+const updateUser = async (userId: string, userdata: string) => {
   try {
     const existingUser = await usersModel.findOne({ userId });
     const updateData = await existingUser?.set(userdata);
@@ -31,4 +37,5 @@ export const userServices = {
   allUser,
   singleUser,
   updateUser,
+  deleteUser,
 };
