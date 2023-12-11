@@ -33,7 +33,7 @@ const getAllUser = async (req: Request, res: Response) => {
 const getSingleUser = async (req: Request, res: Response) => {
   try {
     const id = req.params.userId;
-    
+
     const result = await userServices.singleUser(id);
 
     res.status(200).json({
@@ -46,8 +46,29 @@ const getSingleUser = async (req: Request, res: Response) => {
   }
 };
 
+const updateUser = async (req: Request, res: Response) => {
+  try {
+    const id = req.params.userId;
+    const body_result = req.body.user;
+    const existingUser = await userServices.updateUser(id, body_result);
+    // console.log(body_result.user)
+    res.status(200).json({
+      message: 'Updated ',
+      success: true,
+      data: existingUser,
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      message: 'Internal Server Error',
+      success: false,
+    });
+  }
+};
+
 export const userContrller = {
   craeteUser,
   getAllUser,
   getSingleUser,
+  updateUser,
 };
