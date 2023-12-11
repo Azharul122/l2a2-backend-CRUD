@@ -46,6 +46,21 @@ const getSingleUser = async (req: Request, res: Response) => {
     console.log(error);
   }
 };
+const getSingleUserOrder = async (req: Request, res: Response) => {
+  try {
+    const id = req.params.userId;
+
+    const result = await userServices.allOrders(id);
+
+    res.status(200).json({
+      message: `All orders for ${id} userId`,
+      success: true,
+      data: result,
+    });
+  } catch (error) {
+    console.log(error);
+  }
+};
 const deleteUser = async (req: Request, res: Response) => {
   try {
     const id = req.params.userId;
@@ -105,4 +120,5 @@ export const userContrller = {
   updateUser,
   deleteUser,
   addOrders,
+  getSingleUserOrder,
 };
