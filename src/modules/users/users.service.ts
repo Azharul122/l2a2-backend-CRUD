@@ -21,6 +21,15 @@ const allOrders = async (userId: string) => {
   const data = result?.orders;
   return data;
 };
+const totalOrderPrice = async (userId: string) => {
+  const result = await usersModel.findOne({ userId });
+  let total = 0;
+  result?.orders?.map((order) => {
+    total = total + order?.price;
+  });
+
+  return total;
+};
 
 const deleteUser = async (userId: string) => {
   const result = await usersModel.deleteOne({ userId });
@@ -41,7 +50,6 @@ const updateUser = async (userId: string, userdata: string) => {
 const addOrdersToDB = async (userId: string, orderdata: Orders) => {
   try {
     const existingUser = await usersModel.findOne({ userId });
-    // existingUser.orders =await existingUser?.orders || [];
 
     let data = existingUser?.orders;
     data = data || [];
@@ -62,4 +70,5 @@ export const userServices = {
   deleteUser,
   addOrdersToDB,
   allOrders,
+  totalOrderPrice,
 };

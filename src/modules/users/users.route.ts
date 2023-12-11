@@ -9,5 +9,9 @@ router.put('/users/:userId', userContrller.updateUser);
 router.delete('/users/:userId', userContrller.deleteUser);
 router.put('/users/:userId/orders', userContrller.addOrders);
 router.get('/users/:userId/orders', userContrller.getSingleUserOrder);
+router.get(
+  '/users/:userId/orders/total-price',
+  userContrller.calculateUserOrders,
+);
 
 export const usersRoutes = router;
