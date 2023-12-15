@@ -1,4 +1,4 @@
-// import { AnyObject } from 'mongoose';
+import { number } from 'joi';
 import { usersModel } from '../users.model';
 import { Orders, User } from './users.interface';
 
@@ -12,51 +12,77 @@ const allUser = async () => {
   const result = await usersModel.find();
   return result;
 };
-const singleUser = async (userId: string) => {
-  const result = await usersModel.findOne({ userId });
-  return result;
+const singleUser = async (userId: number) => {
+  const result = await usersModel.isUserExists(userId);
+
+  if (result && result.userId === userId) {
+    return result;
+  } else {
+    return null;
+  }
 };
-const allOrders = async (userId: string) => {
-  const result = await usersModel.findOne({ userId });
+const allOrders = async (userId: number) => {
+  const result = await usersModel.allOrderById(userId);
   const data = result?.orders;
-  return data;
+  if (result) {
+    return data;
+  } else {
+    return null;
+  }
 };
-const totalOrderPrice = async (userId: string) => {
-  const result = await usersModel.findOne({ userId });
-  let total = 0;
-  result?.orders?.map((order) => {
-    total = total + order?.price;
+const totalOrderPrice = async (userId: number) => {
+  const result = await usersModel.totalOrderPriceById(userId);
+  let total: number = 0;
+  result?.orders?.map((order: Orders) => {
+    total = total + order?.price * order.quantity;
   });
 
-  return total;
+  if (result) {
+    return total;
+  } else {
+    return null;
+  }
 };
 
-const deleteUser = async (userId: string) => {
-  const result = await usersModel.deleteOne({ userId });
-  return result;
+const deleteUser = async (userId: number) => {
+  const result = await usersModel.delteUserById(userId);
+
+  console.log(result);
+  if (result?.deletedCount > 0) {
+    return result;
+  } else {
+    return null;
+  }
 };
 
-const updateUser = async (userId: string, userdata: string) => {
+const updateUser = async (userId: number, userdata: string) => {
   try {
-    const existingUser = await usersModel.findOne({ userId });
+    const existingUser = await usersModel.updateUserById(userId);
     const updateData = await existingUser?.set(userdata);
     const savedData = await updateData?.save();
     // console.log(savedData)
-    return savedData;
+    if (existingUser) {
+      return savedData;
+    } else {
+      return null;
+    }
   } catch (error) {
     console.log(error);
   }
 };
-const addOrdersToDB = async (userId: string, orderdata: Orders) => {
+const addOrdersToDB = async (userId: number, orderdata: Orders) => {
   try {
-    const existingUser = await usersModel.findOne({ userId });
-
+    const existingUser = await usersModel.craeteOrderById(userId);
     let data = existingUser?.orders;
     data = data || [];
     data?.push(orderdata);
     const savedData = await existingUser?.save();
     // console.log(savedData)
-    return savedData;
+    if (existingUser) {
+      return savedData;
+    } else {
+      return null;
+    }
   } catch (error) {
     console.log(error);
   }

@@ -1,17 +1,25 @@
 import { Request, Response } from 'express';
 import { userServices } from './users.service';
 import { Orders } from './users.interface';
-// import { User } from "./users.interface";
 
 const craeteUser = async (req: Request, res: Response) => {
   try {
     const { user } = req.body;
     const result = await userServices.craeteUserIntoDB(user);
+    const singleUserData = {
+      userId: result?.userId,
+      username: result?.username,
+      fullName: result?.fullName,
+      email: result?.email,
+      age: result?.age,
+      hobbies: result?.hobbies,
+      isActive: result?.isActive,
+    };
 
     res.status(200).json({
       message: 'Data inserted successfully',
       success: true,
-      data: result,
+      data: singleUserData,
     });
   } catch (error) {
     console.log(error);
@@ -22,10 +30,18 @@ const getAllUser = async (req: Request, res: Response) => {
   try {
     const result = await userServices.allUser();
 
+    const allUserdata = result?.map((singleData) => ({
+      username: singleData?.username,
+      fullName: singleData?.fullName,
+      email: singleData?.email,
+      age: singleData?.age,
+      address: singleData?.address,
+    }));
+
     res.status(200).json({
       message: 'Data fatched successfully',
       success: true,
-      data: result,
+      data: allUserdata,
     });
   } catch (error) {
     console.log(error);
@@ -35,13 +51,36 @@ const getSingleUser = async (req: Request, res: Response) => {
   try {
     const id = req.params.userId;
 
-    const result = await userServices.singleUser(id);
+    const result = await userServices.singleUser(parseInt(id));
+    console.log(result);
 
-    res.status(200).json({
-      message: 'Single data fatched successfully',
-      success: true,
-      data: result,
-    });
+    const singleUserData = {
+      userId: result?.userId,
+      username: result?.username,
+      fullName: result?.fullName,
+      email: result?.email,
+      age: result?.age,
+      hobbies: result?.hobbies,
+      isActive: result?.isActive,
+    };
+
+    if (result == null) {
+      res.send({
+        success: false,
+        message: 'User not found',
+        error: {
+          code: 404,
+          description: 'User not found!',
+        },
+      });
+    }
+    if (singleUserData) {
+      res.status(200).json({
+        message: 'Single data fatched successfully',
+        success: true,
+        data: singleUserData,
+      });
+    }
   } catch (error) {
     console.log(error);
   }
@@ -50,13 +89,23 @@ const getSingleUserOrder = async (req: Request, res: Response) => {
   try {
     const id = req.params.userId;
 
-    const result = await userServices.allOrders(id);
-
-    res.status(200).json({
-      message: `All orders for ${id} userId`,
-      success: true,
-      data: { orders: result },
-    });
+    const result = await userServices.allOrders(parseInt(id));
+    if (result) {
+      res.status(200).json({
+        message: `All orders for ${id} userId`,
+        success: true,
+        data: { orders: result },
+      });
+    } else {
+      res.send({
+        success: false,
+        message: 'User not found',
+        error: {
+          code: 404,
+          description: 'User not found!',
+        },
+      });
+    }
   } catch (error) {
     console.log(error);
   }
@@ -65,13 +114,24 @@ const calculateUserOrders = async (req: Request, res: Response) => {
   try {
     const id = req.params.userId;
 
-    const result = await userServices.totalOrderPrice(id);
+    const result = await userServices.totalOrderPrice(parseInt(id));
 
-    res.status(200).json({
-      message: `Total price calculated successfully!`,
-      success: true,
-      data: { totalPrice: result },
-    });
+    if (result) {
+      res.status(200).json({
+        message: `Total price calculated successfully!`,
+        success: true,
+        data: { totalPrice: result },
+      });
+    } else {
+      res.send({
+        success: false,
+        message: 'User not found',
+        error: {
+          code: 404,
+          description: 'User not found!',
+        },
+      });
+    }
   } catch (error) {
     console.log(error);
   }
@@ -79,11 +139,27 @@ const calculateUserOrders = async (req: Request, res: Response) => {
 const deleteUser = async (req: Request, res: Response) => {
   try {
     const id = req.params.userId;
-    await userServices.deleteUser(id);
-    res.status(200).json({
-      message: 'Data deleted from DB',
-      success: true,
-    });
+    const result = await userServices.deleteUser(parseInt(id));
+    if (result == null) {
+      {
+        res.send({
+          success: false,
+          message: 'User not found',
+          error: {
+            code: 404,
+            description: 'User not found!',
+            data: null,
+          },
+        });
+      }
+    }
+    if (result) {
+      res.status(200).json({
+        message: 'Data deleted from DB',
+        success: true,
+        data: null,
+      });
+    }
   } catch (error) {
     console.log(error);
   }
@@ -92,14 +168,40 @@ const deleteUser = async (req: Request, res: Response) => {
 const updateUser = async (req: Request, res: Response) => {
   try {
     const id = req.params.userId;
-    const body_result = req.body.user;
-    const existingUser = await userServices.updateUser(id, body_result);
+    const body_result = req.body;
+    const existingUser = await userServices.updateUser(
+      parseInt(id),
+      body_result,
+    );
     // console.log(body_result.user)
-    res.status(200).json({
-      message: 'Updated ',
-      success: true,
-      data: existingUser,
-    });
+
+    const singleUserData = {
+      userId: existingUser?.userId,
+      username: existingUser?.username,
+      fullName: existingUser?.fullName,
+      email: existingUser?.email,
+      age: existingUser?.age,
+      hobbies: existingUser?.hobbies,
+      isActive: existingUser?.isActive,
+      address: existingUser?.address,
+    };
+
+    if (existingUser) {
+      res.status(200).json({
+        message: 'Updated ',
+        success: true,
+        data: singleUserData,
+      });
+    } else {
+      res.send({
+        success: false,
+        message: 'User not found',
+        error: {
+          code: 404,
+          description: 'User not found!',
+        },
+      });
+    }
   } catch (error) {
     console.log(error);
     res.status(500).json({
@@ -112,13 +214,24 @@ const addOrders = async (req: Request, res: Response) => {
   try {
     const id = req.params.userId;
     const body_result = req.body as Orders;
-    await userServices.addOrdersToDB(id, body_result);
+    const result = await userServices.addOrdersToDB(parseInt(id), body_result);
 
-    res.status(200).json({
-      message: 'Order placed',
-      success: true,
-      data: null,
-    });
+    if (result) {
+      res.status(200).json({
+        message: 'Order placed',
+        success: true,
+        data: null,
+      });
+    } else {
+      res.send({
+        success: false,
+        message: 'User not found',
+        error: {
+          code: 404,
+          description: 'User not found!',
+        },
+      });
+    }
   } catch (error) {
     console.log(error);
     res.status(500).json({
