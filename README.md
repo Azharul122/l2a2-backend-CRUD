@@ -41,6 +41,7 @@ After that hit the following endpoint:
         }
     }
 }
+```
 
 
 #### Fetch/Read all user(Set it to get Method)
@@ -72,6 +73,7 @@ After that hit the following endpoint:
         ],
         "isActive": true
     }
+```
 
 #### Delete user(Set it to DELETE Method)
 - https://mongoose-crud-tau.vercel.app/api/users/1
@@ -85,6 +87,7 @@ After that hit the following endpoint:
     "price": 1050,
     "quantity": 3
 }
+```
   
 #### All 0rders(Set it to GET Method)
 - https://mongoose-crud-tau.vercel.app/api/users/1/orders
