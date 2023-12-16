@@ -16,6 +16,7 @@ After that hit the following endpoint:
 - https://mongoose-crud-tau.vercel.app/api/users/
 
 ###### req body -
+```JSON
 {
     "user": {
         "userId": 2,
@@ -53,6 +54,7 @@ After that hit the following endpoint:
 #### update user(Set it to PUT Method)
 - https://mongoose-crud-tau.vercel.app/api/users/1
 ###### Req body(userId,username,email unique) 
+```JSON
 {
         "userId": 2,
         "username": "a12345645",
@@ -77,6 +79,7 @@ After that hit the following endpoint:
 #### Add 0rder(Set it to PUT Method)
 - https://mongoose-crud-tau.vercel.app/api/users/1/orders
 ###### Req body
+```JSON
 {
     "productName": "Samsung s23 ultra",
     "price": 1050,
@@ -87,7 +90,7 @@ After that hit the following endpoint:
 - https://mongoose-crud-tau.vercel.app/api/users/1/orders
   
 #### All 0rders total price for specific user(Set it to GET Method)
-- [https://mongoose-crud-tau.vercel.app/api/users/1/orders/total-price](https://mongoose-crud-tau.vercel.app/api/users/1/orders/total-price)https://mongoose-crud-tau.vercel.app/api/users/1/orders/total-price
+- https://mongoose-crud-tau.vercel.app/api/users/1/orders/total-price
 
   
   
