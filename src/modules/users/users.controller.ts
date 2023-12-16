@@ -1,11 +1,13 @@
 import { Request, Response } from 'express';
 import { userServices } from './users.service';
 import { Orders } from './users.interface';
+import userValidationSchema from './users.validate';
 
 const craeteUser = async (req: Request, res: Response) => {
   try {
     const { user } = req.body;
-    const result = await userServices.craeteUserIntoDB(user);
+    const zoddata = userValidationSchema.parse(user);
+    const result = await userServices.craeteUserIntoDB(zoddata);
     const singleUserData = {
       userId: result?.userId,
       username: result?.username,

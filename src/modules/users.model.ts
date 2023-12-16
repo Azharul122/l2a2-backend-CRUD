@@ -1,4 +1,5 @@
 import { Document, Schema, model } from 'mongoose';
+// import bcrypt from 'bcrypt';
 import {
   Address,
   Orders,
@@ -6,17 +7,18 @@ import {
   FullName,
   UserModel,
 } from './users/users.interface';
+// import config from '../config';
 
 const fullNameSchema = new Schema<FullName>({
   firstName: {
     type: String,
-    required: [true, 'First Name is required'],
+
     trim: true,
     maxlength: [20, 'Name can not be more than 20 characters'],
   },
   lastName: {
     type: String,
-    required: [true, 'Last Name is required'],
+
     trim: true,
     maxlength: [20, 'Name can not be more than 20 characters'],
   },
@@ -42,8 +44,7 @@ const userSchema = new Schema<User & Document, UserModel>({
   },
   password: {
     type: String,
-    required: [true, 'Password is required'],
-    maxlength: [20, 'Password can not be more than 20 characters'],
+    maxlength: [18, 'Password can not be more than 20 characters'],
   },
   fullName: { type: fullNameSchema, required: [true, 'Name is required'] },
   age: { type: Number },
@@ -53,6 +54,19 @@ const userSchema = new Schema<User & Document, UserModel>({
   address: addressSchema,
   orders: { type: [ordersSchema], default: [] },
 });
+
+// pre save middleware/ hook : will work on create()  save()
+// userSchema.pre('save', async function (next) {
+//   // console.log(this, 'pre hook : we will save  data');
+//   // eslint-disable-next-line @typescript-eslint/no-this-alias
+//   const user = this; // doc
+//   // hashing password and save into DB
+//   user.password = await bcrypt.hash(
+//     user.password,
+//     Number(config.bcrypt_salt_step),
+//   );
+//   next();
+// });
 
 //creating a custom static method for fetch single user data
 userSchema.statics.isUserExists = async function (userId: number) {

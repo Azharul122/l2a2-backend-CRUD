@@ -1,4 +1,3 @@
-import { number } from 'joi';
 import { usersModel } from '../users.model';
 import { Orders, User } from './users.interface';
 
@@ -12,6 +11,7 @@ const allUser = async () => {
   const result = await usersModel.find();
   return result;
 };
+
 const singleUser = async (userId: number) => {
   const result = await usersModel.isUserExists(userId);
 
@@ -21,6 +21,7 @@ const singleUser = async (userId: number) => {
     return null;
   }
 };
+
 const allOrders = async (userId: number) => {
   const result = await usersModel.allOrderById(userId);
   const data = result?.orders;
@@ -30,6 +31,7 @@ const allOrders = async (userId: number) => {
     return null;
   }
 };
+
 const totalOrderPrice = async (userId: number) => {
   const result = await usersModel.totalOrderPriceById(userId);
   let total: number = 0;
